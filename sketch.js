@@ -102,32 +102,33 @@ function setup() {
 
 function draw() {
   background(220);
-    cellCount = 0;
-    for (let i = 0; i < cols; i++) {
-      for (let j = 0; j < rows; j++) {
-        if (cells[i][j].visited) {
-          cellCount++
-        }
-        cells[i][j].show();
+  cellCount = 0;
+  for (let i = 0; i < cols; i++) {
+    for (let j = 0; j < rows; j++) {
+      if (cells[i][j].visited) {
+        cellCount++
       }
-    }
-    fill(0, 255, 0);
-    current.visited = true;
-    current.showCurrent(); // just coloring the current cell
-    goal.showCurrent(); // the "end" if you were to actually play the maze
-    let nextCell = checkNeighbors(current);
-    if (nextCell) {
-      nextCell[0].visited = true;
-      cellStack.push(current);
-      removeWalls(current, nextCell);
-      current = nextCell[0];
-    } else if (cellStack.length > 0) {
-      current = cellStack.pop();
-    }
-    if (cellCount == ((width / w) * (height / w))) {
-      current = cells[0][0];
-      current.showCurrent();
-      noLoop();
+      cells[i][j].show();
     }
   }
+  if (cellCount == ((width / w) * (height / w))) {
+    current = cells[0][0];
+    current.showCurrent();
+    noLoop();
+  }
+  fill(0, 255, 0);
+  current.visited = true;
+  current.showCurrent(); // just coloring the current cell
+  goal.showCurrent(); // the "end" if you were to actually play the maze
+  let nextCell = checkNeighbors(current);
+  if (nextCell) {
+    nextCell[0].visited = true;
+    cellStack.push(current);
+    removeWalls(current, nextCell);
+    current = nextCell[0];
+  } else if (cellStack.length > 0) {
+    current = cellStack.pop();
+  }
+
+}
 
