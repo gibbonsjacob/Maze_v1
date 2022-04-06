@@ -9,9 +9,6 @@ class cell {
         this.y = this.j * this.w;
         this.visited = false;
         this.walls = [true, true, true, true];
-        // for (let i = 0; i < 4; i++){
-        //     this.walls.push((random() >= .5));
-        // }
     }
 
 
@@ -32,15 +29,66 @@ class cell {
             line(this.x, this.y, this.x, this.y + this.w);
         }
         if (this.visited) {
-            fill(255, 0, 255, 100);
-            strokeWeight(0);
+            fill(255, 0, 255,100);
+            noStroke();
             rect(this.x, this.y, this.w - 2, this.w - 2);
         }
     }
 
     showCurrent() {
         fill(0, 255, 0);
-        rect(this.x, this.y, this.w, this.w);
+        noStroke();
+        rect(this.x + 5, this.y + 5, this.w - 10, this.w - 10);
+    }
+
+    drawDirection(direction) {
+        fill(0)
+        let x1, y1, x2, y2, x3, y3;
+        switch (direction) {
+
+            case 0:
+                // up
+                x1 = current.x + (current.w / 6);
+                y1 = current.y + (current.w / 2);
+                x2 = current.x + (5 * (current.w / 6));
+                y2 = current.y + (current.w / 2);
+                x3 = current.x + (current.w / 2);
+                y3 = current.y + (current.w / 6);
+
+                break;
+            case 1:
+                // right
+                x1 = current.x + (current.w / 2);
+                y1 = current.y + (current.w / 6);
+                x2 = current.x + (5 * (current.w / 6));
+                y2 = current.y + (current.w / 2);
+                x3 = current.x + (current.w / 2);
+                y3 = current.y + (5 * current.w / 6);
+                break;
+
+            case 2:
+                // down 
+                x1 = current.x + (current.w / 6);
+                y1 = current.y + current.w / 2;
+                x2 = current.x + (5 * current.w / 6);
+                y2 = current.y + current.w / 2;
+                x3 = current.x + (current.w / 2);
+                y3 = current.y + 5 * current.w / 6;
+                break;
+
+            case 3:
+                // left
+                x1 = current.x + current.w / 2;
+                y1 = current.y + current.w / 6;
+                x2 = current.x + (current.w / 6);
+                y2 = current.y + current.w / 2;
+                x3 = current.x + (current.w / 2);
+                y3 = current.y + 5 * current.w / 6;
+
+                break;
+
+        }
+        triangle(x1, y1, x2, y2, x3, y3);
     }
 
 
