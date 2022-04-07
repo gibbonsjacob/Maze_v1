@@ -5,7 +5,7 @@
 
 var cells = [];
 let cellCount;
-let w = 100;
+let w = 20;
 let cols;
 let rows;
 let current;
@@ -19,57 +19,87 @@ let i;
 let j;
 
 
+// var rightWallDirections = {
+//   // key is the wall and value is the direction you're facing to keep that wall to the right of you
+//   0: 3,
+//   1: 0,
+//   2: 1,
+//   3: 2
+// };
 
-function getWalls(arr) {
-
-  let indexes = [];
-  for (let i = 0; i < arr.length; i++) {
-    if (arr[i] == false) {
-      indexes.push(i);
-    }
-  }
-  return indexes;
-}
+// var optimalDirections = {
+//   0: 1,
+//   1: 2,
+//   2: 3,
+//   3: 0
+// };
 
 
 
-function getNext(cell, direction) {
-  // this is going to look very similar to checkNeighbors()
-  let newCoords = { i: cell.i, j: cell.j }
-  let optimalDirection = (direction - 1) % 4; // gives us the direction to the "right" of whichever way it's currently facing
-  console.log(direction, optimalDirection)
-  let newDirection; 
-  if (!cell.walls[optimalDirection]){
-    newDirection = optimalDirection;
-  } else {
-    newDirection = direction;
-  }
-  switch (newDirection) {
+// function getWalls(arr) {
 
-    case 0:
-      // up
-      newCoords.j -= 1;
-      break;
+//   let indexes = [];
+//   for (let i = 0; i < arr.length; i++) {
+//     if (arr[i] == false) {
+//       indexes.push(i);
+//     }
+//   }
+//   return indexes;
+// }
 
-    case 1:
-      // right
-      newCoords.i += 1;
-      break;
 
-    case 2:
-      // down
-      newCoords.j += 1;
-      break;
 
-    case 3:
-      // left 
-      newCoords.i -= 1;
-      break;
+// function getNext(cell) {
+//   let newCoords = { i: cell.i, j: cell.j };
+//   let optimalDirection = optimalDirections[direction];
 
-  }
-  return newCoords;
+//   let newDirection = direction;
 
-}
+//   if (cell.walls[direction]) {
+//     newDirection = (direction + 1) % 4;
+//   }
+//   if (!cell.walls[optimalDirection]) {
+//     newDirection = optimalDirection;
+//   }
+//   if (cell.walls[direction] && cell.walls[optimalDirection]) {
+//     newDirection = rightWallDirections[direction]
+//   }
+
+
+//   if (getWalls(cell.walls).length == 1 && cell != cells[0][0]) {
+//     newDirection = (direction + 2) % 4;
+
+//   }
+
+
+//   direction = newDirection;
+//   cell.drawDirection(newDirection)
+//   switch (newDirection) {
+
+//     case 0:
+//       // up
+//       newCoords.j -= 1;
+//       break;
+
+//     case 1:
+//       // right
+//       newCoords.i += 1;
+//       break;
+
+//     case 2:
+//       // down
+//       newCoords.j += 1;
+//       break;
+
+//     case 3:
+//       // left 
+//       newCoords.i -= 1;
+//       break;
+
+//   }
+//   return newCoords;
+
+// }
 
 
 function checkNeighbors(cell) {
@@ -160,14 +190,9 @@ function generateMaze() {
   }
 }
 
-
-
-
-
-
 function setup() {
   createCanvas(1000, 1000);
-  frameRate(1);
+  // frameRate(10);
   cols = floor(width / w);
   rows = floor(height / w);
 
@@ -175,14 +200,14 @@ function setup() {
     cells[i] = [];
     for (let j = 0; j < rows; j++) {
       cells[i][j] = new cell(i, j, w);
-      // cellCount++;
     }
   }
   goal = cells[cols - 1][rows - 1];
-  current = cells[0][0]; // set it once to generate the maze, then again to show the start of the maze
-  // direction = floor(random(4)); // start the maze by facing a random direction (this will change in the first frame)
+  current = cells[0][0]; 
+
 
   generateMaze();
+  // setting every outer border to have a wall
   for (let i = 0; i < cols; i++) {
     for (let j = 0; j < rows; j++) {
       if (j == 0) {
@@ -197,56 +222,40 @@ function setup() {
     }
   }
   current = cells[0][0];
-
   possibleDirections = getWalls(current.walls);
   direction = possibleDirections[floor(random(possibleDirections.length))]
+
+
 }
 
 function draw() {
   background(220);
-  
+  for (let i = 0; i < cols; i++) {
+    for (let j = 0; j < rows; j++) {
+      cells[i][j].show();
+    }
+  }
+
   cellCount = 0;
-  if (current == goal){
+  if (current == goal) {
     noLoop();
     console.log(frameCount)
   }
   current.showCurrent();
   goal.showCurrent();
-  let rightWall = (direction + 1) % 4;
-  if (!current.walls[rightWall]) {
-    direction = rightWall;
-  }
+  nextCell = WallFollowerGetNext(current);
 
-  current.drawDirection(direction);
-  nextCell = getNext(current, direction);
 
-  for (let i = 0; i < cols; i++) {
-    for (let j = 0; j < rows; j++) {
-      // if (cells[i][j].visited) {
-      // }
-      cells[i][j].show();
-    }
-  }
 
-  if (nextCell) {
-  visitedCells.push(current);
-  
-  current = cells[nextCell.i][nextCell.j];
-  } else {
-    current = visitedCells.pop();
-  }
+
+
+    visitedCells.push(current);
+    current = cells[nextCell.i][nextCell.j];
+
+    // for (let vCell of visitedCells) {
+    //   vCell.showCurrent();
+    // }
+
 }
 
 
-
-// (directionIndex + 1) % num of possible directions = index of right wall!
-// so (directionIndex + 1) % 4 = index of right wall
-
-//       direction   right wall
-// up    0           1     
-// right 1           2
-// down  2           3
-// left  3           0
-
-
-// so to get right wall from direction, we take number of directions % 
