@@ -31,7 +31,7 @@ class cell {
         if (this.visited) {
             fill(255, 0, 255,100);
             noStroke();
-            rect(this.x, this.y, this.w - 2, this.w - 2);
+            rect(this.x, this.y, this.w, this.w);
         }
     }
 
@@ -89,6 +89,14 @@ class cell {
 
         }
         triangle(x1, y1, x2, y2, x3, y3);
+    }
+
+    deadEnd() {
+        fill(0, 100);
+        noStroke();
+        rect(this.x, this.y, this.w, this.w);
+        fill(255, 255, 0);
+        // ellipse(this.x, this.y, this.w, this.w)
     }
 
 

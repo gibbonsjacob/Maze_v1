@@ -1,3 +1,10 @@
+// Jacob Gibbons
+// 4.1.2022
+// Wall Follower Maze Solving Algorithm, following the righthand wall
+// https://en.wikipedia.org/wiki/Maze-solving_algorithm
+
+
+
 var rightWallDirections = {
     // key is the wall and value is the direction you're facing to keep that wall to the right of you
     0: 3,
