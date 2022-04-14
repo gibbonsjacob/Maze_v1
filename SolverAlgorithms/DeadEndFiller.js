@@ -83,47 +83,43 @@ function addWalls(cell, neighbor) {
 
 
 
-function DeadEndGetNext(cell, direction) {
-
-    // find all cells with dead ends (any cell with 3 walls)
-    // move to the previous cell in the path and add a wall to the cell with the deadend (removing it from possible paths)
-    // this will basically be next cell but in reverse
-    // do this recursively until a path is found 
-
-
-
-
-    let newCoords = { i: cell.i, j: cell.j };
-
-
-    newDirection = direction;
-
-
-    cell.drawDirection(newDirection)
-    switch (newDirection) {
-
-        case 0:
-            // up
-            newCoords.j -= 1;
-            break;
-
-        case 1:
-            // right
-            newCoords.i += 1;
-            break;
-
-        case 2:
-            // down
-            newCoords.j += 1;
-            break;
-
-        case 3:
-            // left 
-            newCoords.i -= 1;
-            break;
-
+function DeadEndSolve() {
+    var deadEnds = getDeadEnds();
+    if (deadEnds.length > 0) {
+      for (let deadEndCell of deadEnds) {
+        deadEndCell.deadEnd();
+        neighbor = getDeadEndNeighbor(deadEndCell);
+        addWalls(deadEndCell, neighbor);
+      }
+    } else {
+      // path has been identified so animate the path
+      let currentWalls = [];
+      path.push(current);
+      for (let i = 0; i < current.walls.length; i++) {
+        if (!current.walls[i]) {
+          currentWalls.push(i);
+        }
+      }
+      nextCell = getDeadEndNeighbor(current, currentWalls[0]);
+      if (path.indexOf(nextCell) > -1) {
+        nextCell = getDeadEndNeighbor(current, currentWalls[1]);
+      }
+      current = nextCell;
     }
-    return newCoords;
+    for (let p of path){
+      p.showCurrent();
+    }
+  
+    for (let i = 0; i < cols; i++) {
+      for (let j = 0; j < rows; j++) {
+        if (cells[i][j].walls.indexOf(false) == -1) {
+          cells[i][j].deadEnd();
+  
+        }
+      }
+    }
+  
+    
 
 }
 

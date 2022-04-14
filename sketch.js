@@ -167,51 +167,15 @@ function draw() {
   }
   current.showCurrent();
   goal.showCurrent();
+
+  // Wall Follower Algorithm
   // nextCell = WallFollowerGetNext(current);
 
-  var deadEnds = getDeadEnds();
 
-  if (deadEnds.length > 0) {
-    for (let deadEndCell of deadEnds) {
-      deadEndCell.deadEnd();
-      neighbor = getDeadEndNeighbor(deadEndCell);
-      addWalls(deadEndCell, neighbor);
-    }
-  } else {
-    // path has been identified so animate the path
-    let currentWalls = [];
-    path.push(current);
-    for (let i = 0; i < current.walls.length; i++) {
-      if (!current.walls[i]) {
-        currentWalls.push(i);
-      }
-    }
-    nextCell = getDeadEndNeighbor(current, currentWalls[0]);
-    if (path.indexOf(nextCell) > -1) {
-      nextCell = getDeadEndNeighbor(current, currentWalls[1]);
-    }
-    current = nextCell;
-  }
+  // Dead-End Filling Algorithm
+  DeadEndSolve();
 
 
-
-
-
-
-  // visitedCells.push(current);
-  // current = cells[nextCell.i][nextCell.j];
-  for (let p of path){
-    p.showCurrent();
-  }
-
-  for (let i = 0; i < cols; i++) {
-    for (let j = 0; j < rows; j++) {
-      if (cells[i][j].walls.indexOf(false) == -1) {
-        cells[i][j].deadEnd();
-
-      }
-    }
-  }
 }
 
 
